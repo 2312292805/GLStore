@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+<!--业务逻辑层的开发-->
+    <!--设定业务逻辑层的包扫描器，目的是在指定路径下，使用@service注解的类，spring负责创建对象，并且添加依赖-->
+    <context:component-scan base-package="com.GLstore.service"></context:component-scan>
+    <!--设置事务管理器,id为数据源配置-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!--成员变量的注入-->
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <!--添加事物的切面-->
+    <tx:advice id="myadvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <!--如果是查询操作，则设置为只读操作-->
+            <tx:method name="*select*" read-only="true"/>
+            <tx:method name="*find*" read-only="true"/>
+            <tx:method name="*get*" read-only="true"/>
+            <tx:method name="*search*" read-only="true"/>
+            <!--如果是CRUD操作，那么必须是支持事务操作,保证操作一定可以被执行-->
+            <tx:method name="*insert*" propagation="REQUIRED"/>
+            <tx:method name="*save*" propagation="REQUIRED"/>
+            <tx:method name="*add*" propagation="REQUIRED"/>
+            <!--删除操作事务-->
+            <tx:method name="*delete*" propagation="REQUIRED"/>
+            <tx:method name="*remove*" propagation="REQUIRED"/>
+            <tx:method name="*clear*" propagation="REQUIRED"/>
+            <!--更新操作事务-->
+            <tx:method name="*update*" propagation="REQUIRED"/>
+            <tx:method name="*modify*" propagation="REQUIRED"/>
+            <tx:method name="*change*" propagation="REQUIRED"/>
+            <tx:method name="*set*" propagation="REQUIRED"/>
+            <!--如果不能匹配上述的关键字，那么就只能是支持事务-->
+            <tx:method name="*" propagation="SUPPORTS"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!--完成切面和切入点的织入-->
+    <aop:config>
+        <aop:pointcut id="mypointcut" expression="execution(* com.GLstore.service.*.*(..))"/>
+        <aop:advisor advice-ref="myadvice" pointcut-ref="mypointcut"></aop:advisor>
+    </aop:config>
+
+</beans>

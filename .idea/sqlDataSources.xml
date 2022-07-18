@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDataSourceStorage">
+    <option name="dataSources">
+      <list>
+        <State>
+          <option name="id" value="07208d42-1264-4da4-97f7-9d4226670354" />
+          <option name="name" value="bjpowernode" />
+          <option name="urls">
+            <array>
+              <option value="file://$PROJECT_DIR$/bjpowernode.sql" />
+            </array>
+          </option>
+        </State>
+      </list>
+    </option>
+  </component>
+</project>
